@@ -1,5 +1,5 @@
 'use strict';
 
-const startGame = window.rps('EN');
+const game = window.rps;
 
-startGame();
+game;

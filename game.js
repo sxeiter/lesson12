@@ -1,115 +1,58 @@
 'use strict';
 
-(() => {
-  const FIGURES_ENG = ['rock', 'scissors', 'paper'];
-  const FIGURES_RUS = ['камень', 'ножницы', 'бумага'];
+(function() {
+  let userScore = 0;
+  let computerScore = 0;
 
-  const getRandomIntInclusive = (min, max) => {
+  function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max + 1));
-  };
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
-  const game = (language) => {
-    const result = {
-      player: 0,
-      computer: 0,
-    };
-    const lang =
-      language === 'EN' || language === 'ENG' ? FIGURES_ENG : FIGURES_RUS;
+  function game() {
+    const userChoice = prompt('Выберите: камень, ножницы или бумага');
+    const computerChoice = ['камень', 'ножницы', 'бумага'][getRandomIntInclusive(0, 2)];
 
-    const getFigure = () => {
-      const exitExpression =
-        lang === FIGURES_ENG ?
-          'Are you sure you want to get out?' :
-          'Точно ли Вы хотите выйти?';
-      return exitExpression;
-    };
-
-    const compWord = lang === FIGURES_ENG ? 'Computer' : 'Компьютер';
-    const you = lang === FIGURES_ENG ? 'You' : 'Вы';
-    const winner = lang === FIGURES_ENG ? 'win' : 'выиграл';
-    const draw = lang === FIGURES_ENG ? 'draw' : 'Ничья';
-    const user = lang === FIGURES_ENG ? 'player' : 'Игрок';
-    const resultat = lang === FIGURES_ENG ? 'Result' : 'Результат';
-
-    return function start() {
-      const computer = getRandomIntInclusive(0, 2);
-      console.log(computer);
-      let answer = prompt(`${lang}?`);
-      if (answer) {
-        answer = answer.toLowerCase();
-        const arr = [...lang];
-        const compAnswer = arr.slice(computer, computer + 1).toString();
-        if (answer[0] === compAnswer[0]) {
-          alert(`
-                        ${compWord}:${compAnswer}
-                        ${you}:${compAnswer}
-                        ${draw}`);
-          return start();
-        }
-        if (answer[0] === 'к' || answer[0] === 'r') {
-          if (compAnswer === lang[2]) {
-            result.computer += 1;
-            alert(`
-                ${compWord}:${compAnswer}
-                ${you}:${lang[0]}
-                ${compWord} ${winner}`);
-          }
-          if (compAnswer === lang[1]) {
-            result.player += 1;
-            alert(`
-                ${compWord}:${compAnswer}
-                ${you}:${lang[0]}
-                ${user} ${winner}`);
-          }
-        }
-        if (answer[0] === 'н' || answer[0] === 's') {
-          if (compAnswer === lang[0]) {
-            result.computer += 1;
-            alert(`
-                ${compWord}:${compAnswer}
-                ${you}:${lang[1]}
-                ${compWord} ${winner}`);
-          }
-          if (compAnswer === lang[2]) {
-            result.player += 1;
-            alert(`
-                ${compWord}:${compAnswer}
-                ${you}:${lang[1]}
-                ${user} ${winner}`);
-          }
-        }
-        if (answer[0] === 'б' || answer[0] === 'p') {
-          if (compAnswer === lang[1]) {
-            result.computer += 1;
-            alert(`
-                ${compWord}:${compAnswer}
-                ${you}:${lang[2]}
-                ${compWord} ${winner}`);
-          }
-          if (compAnswer === lang[0]) {
-            result.player += 1;
-            alert(`
-                ${compWord}:${compAnswer}
-                ${you}:${lang[2]}
-                ${user} ${winner}`);
-          }
-        }
-        return start();
-      } else {
-        const exit = confirm(getFigure());
-        if (!exit) {
-          return start();
-        } else {
-          alert(`
-                ${resultat}:
-                ${compWord}:${result.computer},
-                ${you}:${result.player}
-            `);
-        }
+    if (userChoice === null) {
+      const confirmExit = confirm('Вы уверены, что хотите выйти?');
+      if (confirmExit) {
+        console.log(`Результат игры: Пользователь - ${userScore} очков, Компьютер - ${computerScore} очков`);
+        return;
       }
-    };
-  };
-  window.rps = game;
+    }
+
+    /* if (!["камень", "ножницы", "бумага", "кам", "нож", "бум"].includes(userChoice)) {
+      console.log("Неверный выбор. Попробуйте снова.");
+      game();
+      return;
+    }
+    */
+
+    if (userChoice.startsWith(['камень', 'ножницы', 'бумага'])) {
+      console.log('Неверный выбор. Попробуйте снова.');
+      game();
+      return;
+    }
+    console.log(`Вы выбрали: ${userChoice}`);
+    console.log(`Компьютер выбрал: ${computerChoice}`);
+
+    if (userChoice === computerChoice) {
+      alert('Ничья!');
+    } else if (
+      (userChoice === 'камень' && computerChoice === 'ножницы') ||
+      (userChoice === 'ножницы' && computerChoice === 'бумага') ||
+      (userChoice === 'бумага' && computerChoice === 'камень')
+    ) {
+      alert('Вы победили!');
+      userScore++;
+    } else {
+      alert('Вы проиграли!');
+      computerScore++;
+    }
+
+    game();
+  }
+
+  game();
 })();
