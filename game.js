@@ -1,6 +1,7 @@
 'use strict';
 
 (function() {
+  const figures = ['камень', 'ножницы', 'бумага'];
   let userScore = 0;
   let computerScore = 0;
 
@@ -12,7 +13,8 @@
 
   function game() {
     const userChoice = prompt('Выберите: камень, ножницы или бумага');
-    const computerChoice = ['камень', 'ножницы', 'бумага'][getRandomIntInclusive(0, 2)];
+    const computerChoice = figures[getRandomIntInclusive(0, 2)];
+    
 
     if (userChoice === null) {
       const confirmExit = confirm('Вы уверены, что хотите выйти?');
@@ -22,18 +24,12 @@
       }
     }
 
-    /* if (!["камень", "ножницы", "бумага", "кам", "нож", "бум"].includes(userChoice)) {
+    if (!figures.includes(userChoice)) {
       console.log("Неверный выбор. Попробуйте снова.");
       game();
       return;
     }
-    */
-
-    if (userChoice.startsWith(['камень', 'ножницы', 'бумага'])) {
-      console.log('Неверный выбор. Попробуйте снова.');
-      game();
-      return;
-    }
+  
     console.log(`Вы выбрали: ${userChoice}`);
     console.log(`Компьютер выбрал: ${computerChoice}`);
 
