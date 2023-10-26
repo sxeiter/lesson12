@@ -2,53 +2,57 @@
 
 (function() {
   const figures = ['камень', 'ножницы', 'бумага'];
-  let userScore = 0;
-  let computerScore = 0;
 
   function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   function game() {
-    const userChoice = prompt('Выберите: камень, ножницы или бумага');
-    const computerChoice = figures[getRandomIntInclusive(0, 2)];
-    
+    const check = {
+      player: 0,
+      computer: 0,
+    };
 
-    if (userChoice === null) {
-      const confirmExit = confirm('Вы уверены, что хотите выйти?');
-      if (confirmExit) {
-        console.log(`Результат игры: Пользователь - ${userScore} очков, Компьютер - ${computerScore} очков`);
-        return;
+    return function gameStart() {
+      const pcAnswer = figures[getRandomIntInclusive(0, 2)];
+      console.log(`Компьютер выбрал: ${pcAnswer}`);
+      const userAnswer = prompt(`${figures.join(', ')}. Введите вариант ответа`);
+      console.log(`Игрок выбрал ${userAnswer}`);
+
+      if (userAnswer === null) {
+        const confirmExit = confirm('Вы уверены, что хотите выйти?');
+        if (confirmExit) {
+          alert(`Результат игры: Пользователь - ${check.player} очков, Компьютер - ${check.computer} очков`);
+          return;
+        }
       }
-    }
 
-    if (!figures.includes(userChoice)) {
-      console.log("Неверный выбор. Попробуйте снова.");
-      game();
-      return;
-    }
-  
-    console.log(`Вы выбрали: ${userChoice}`);
-    console.log(`Компьютер выбрал: ${computerChoice}`);
+      const checkUserAnswer = figures.indexOf(figures.find(elem => elem.startsWith(userAnswer.toLocaleLowerCase())));
+      console.log(checkUserAnswer);
 
-    if (userChoice === computerChoice) {
-      alert('Ничья!');
-    } else if (
-      (userChoice === 'камень' && computerChoice === 'ножницы') ||
-      (userChoice === 'ножницы' && computerChoice === 'бумага') ||
-      (userChoice === 'бумага' && computerChoice === 'камень')
-    ) {
-      alert('Вы победили!');
-      userScore++;
-    } else {
-      alert('Вы проиграли!');
-      computerScore++;
-    }
-
-    game();
+      if (pcAnswer === checkUserAnswer) {
+        alert('Ничья');
+      } else if 
+      (!figures.includes(checkUserAnswer)) {
+        alert('Неверный ввод, попробуйстек снова!!!');
+        gameStart();
+        return;
+      } else if
+      ((pcAnswer === figures[0] && checkUserAnswer === figures[2]) ||
+      (pcAnswer === figures[1] && checkUserAnswer === figures[0]) ||
+      (pcAnswer === figures[2] && checkUserAnswer === figures[1])) {
+        check.player++;
+        alert('Вы победили!');
+      } else {
+        check.computer++;
+        alert('Вы проиграли');
+      };
+       
+      return gameStart();
+    };
   }
 
-  game();
+  window.RPS = game;
 })();
